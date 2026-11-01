@@ -12,8 +12,9 @@ import { colors, common } from '../theme';
 type Props = NativeStackScreenProps<RootStackParamList, 'Confirmation'>;
 
 export function ConfirmationScreen({ navigation, route }: Props) {
-  const { transport, seat } = route.params;
+  const { transport, selectedSeats } = route.params;
   const trip = trips[transport];
+  const total = (trip.priceValue * selectedSeats.length).toFixed(2).replace('.', ',');
   return (
     <SafeAreaView style={common.screen}>
       <ScrollView contentContainerStyle={common.content}>
@@ -26,8 +27,8 @@ export function ConfirmationScreen({ navigation, route }: Props) {
           <Text style={styles.date}>12 октября 2026 · {trip.departure}–{trip.arrival}</Text>
           <View style={styles.rule} />
           <Text style={styles.trip}>{trip.title}</Text>
-          <Text style={styles.place}>{transport === 'train' ? 'Вагон 03' : 'Салон'} · место {seatLabel(seat)}</Text>
-          <View style={styles.priceRow}><Text style={styles.priceCaption}>Стоимость билета</Text><Text style={styles.price}>{trip.price}</Text></View>
+          <Text style={styles.place}>{transport === 'train' ? 'Вагон 03' : 'Салон'} · {selectedSeats.length === 1 ? 'место' : 'места'} {selectedSeats.map(seatLabel).join(', ')}</Text>
+          <View style={styles.priceRow}><Text style={styles.priceCaption}>Стоимость {selectedSeats.length} бил.</Text><Text style={styles.price}>{total} BYN</Text></View>
         </View>
         <View style={styles.notice}><Text style={styles.noticeText}>Это демонстрация выбора места. Билет не оплачен и не забронирован.</Text></View>
         <View style={styles.again}><PrimaryButton label="Найти другую поездку" onPress={() => navigation.popTo('Search', { transport })} /></View>

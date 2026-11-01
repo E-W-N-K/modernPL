@@ -25,18 +25,18 @@ export function SearchScreen({ navigation, route }: Props) {
         <Text style={[common.subtitle, styles.subtitle]}>Выберите транспорт и маршрут</Text>
         <View style={styles.tabs}>
           {(['train', 'bus'] as Transport[]).map((item) => (
-            <Pressable key={item} accessibilityRole="tab" accessibilityState={{ selected: transport === item }} onPress={() => setTransport(item)} style={[styles.tab, transport === item && styles.tabActive]}>
+            <Pressable key={item} accessibilityRole="tab" accessibilityState={{ selected: transport === item }} onPress={() => setTransport(() => item)} style={[styles.tab, transport === item && styles.tabActive]}>
               <MaterialCommunityIcons name={item === 'train' ? 'train' : 'bus'} size={22} color={transport === item ? colors.brand : colors.secondary} />
               <Text style={[styles.tabText, transport === item && styles.tabTextActive]}>{item === 'train' ? 'Поезд' : 'Автобус'}</Text>
             </Pressable>
           ))}
         </View>
         <Text style={styles.label}>Откуда</Text>
-        <View style={styles.field}><Ionicons name="location-outline" size={22} color={colors.secondary} /><TextInput style={styles.input} value={from} onChangeText={setFrom} accessibilityLabel="Откуда" /></View>
+        <View style={styles.field}><Ionicons name="location-outline" size={22} color={colors.secondary} /><TextInput style={styles.input} value={from} onChangeText={(value) => setFrom(() => value)} accessibilityLabel="Откуда" /></View>
         <Text style={styles.label}>Куда</Text>
-        <View style={styles.field}><Ionicons name="location-outline" size={22} color={colors.secondary} /><TextInput style={styles.input} value={to} onChangeText={setTo} accessibilityLabel="Куда" /></View>
+        <View style={styles.field}><Ionicons name="location-outline" size={22} color={colors.secondary} /><TextInput style={styles.input} value={to} onChangeText={(value) => setTo(() => value)} accessibilityLabel="Куда" /></View>
         <Text style={styles.label}>Дата поездки</Text>
-        <View style={styles.field}><Ionicons name="calendar-outline" size={22} color={colors.secondary} /><TextInput style={styles.input} value={date} onChangeText={setDate} accessibilityLabel="Дата поездки" /></View>
+        <View style={styles.field}><Ionicons name="calendar-outline" size={22} color={colors.secondary} /><TextInput style={styles.input} value={date} onChangeText={(value) => setDate(() => value)} accessibilityLabel="Дата поездки" /></View>
         <View style={styles.passenger}><Ionicons name="person-outline" size={22} color={colors.brand} /><Text style={styles.passengerText}>1 взрослый</Text></View>
         <View style={styles.searchButton}><PrimaryButton label="Найти рейсы" onPress={() => navigation.navigate('Results', { transport })} /></View>
         <Text style={styles.note}>Прямые рейсы · цены за одного пассажира</Text>

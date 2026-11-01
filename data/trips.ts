@@ -8,6 +8,7 @@ export type Trip = {
   arrival: string;
   duration: string;
   price: string;
+  priceValue: number;
   seatArea: string;
   occupied: number[];
 };
@@ -21,6 +22,7 @@ export const trips: Record<Transport, Trip> = {
     arrival: '11:25',
     duration: '3 ч 13 мин',
     price: '28,50 BYN',
+    priceValue: 28.5,
     seatArea: 'Вагон 03 · сидячий',
     occupied: [2, 4, 5, 8, 11, 14],
   },
@@ -32,6 +34,7 @@ export const trips: Record<Transport, Trip> = {
     arrival: '13:20',
     duration: '4 ч 20 мин',
     price: '22,00 BYN',
+    priceValue: 22,
     seatArea: 'Салон · 16 мест',
     occupied: [1, 4, 7, 8, 10, 15],
   },

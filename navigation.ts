@@ -5,5 +5,5 @@ export type RootStackParamList = {
   Search: { transport: Transport } | undefined;
   Results: { transport: Transport };
   Seats: { transport: Transport };
-  Confirmation: { transport: Transport; seat: number };
+  Confirmation: { transport: Transport; selectedSeats: number[] };
 };
