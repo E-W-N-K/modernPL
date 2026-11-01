@@ -8,10 +8,12 @@ import { seatLabel, trips } from '../data/trips';
 import { StepHeader } from '../components/StepHeader';
 import { PrimaryButton } from '../components/PrimaryButton';
 import { colors, common } from '../theme';
+import { useAuth } from '../context/AuthContext';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Confirmation'>;
 
 export function ConfirmationScreen({ navigation, route }: Props) {
+  const { email } = useAuth();
   const { transport, selectedSeats } = route.params;
   const trip = trips[transport];
   const total = (trip.priceValue * selectedSeats.length).toFixed(2).replace('.', ',');
@@ -22,6 +24,7 @@ export function ConfirmationScreen({ navigation, route }: Props) {
         <View style={styles.check}><Ionicons name="checkmark" size={44} color={colors.brand} /></View>
         <Text style={styles.title}>Отличный выбор!</Text>
         <Text style={styles.subtitle}>Ваш маршрут собран</Text>
+        {email && <Text style={styles.account}>Для пользователя {email}</Text>}
         <View style={[common.card, styles.card]}>
           <Text style={styles.route}>Минск → Брест</Text>
           <Text style={styles.date}>12 октября 2026 · {trip.departure}–{trip.arrival}</Text>
@@ -41,6 +44,7 @@ const styles = StyleSheet.create({
   check: { width: 72, height: 72, borderRadius: 24, backgroundColor: colors.brandLight, alignSelf: 'center', alignItems: 'center', justifyContent: 'center', marginTop: 8 },
   title: { color: colors.ink, fontSize: 28, fontWeight: '700', textAlign: 'center', marginTop: 20 },
   subtitle: { color: colors.secondary, fontSize: 16, textAlign: 'center', marginTop: 16 },
+  account: { color: colors.brand, fontSize: 12, fontWeight: '700', textAlign: 'center', marginTop: 8 },
   card: { marginTop: 28, padding: 24 },
   route: { color: colors.ink, fontSize: 20, fontWeight: '700' },
   date: { color: colors.secondary, fontSize: 12, marginTop: 12 },

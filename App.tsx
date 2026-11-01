@@ -8,11 +8,13 @@ import { SearchScreen } from './screens/SearchScreen';
 import { ResultsScreen } from './screens/ResultsScreen';
 import { SeatsScreen } from './screens/SeatsScreen';
 import { ConfirmationScreen } from './screens/ConfirmationScreen';
+import { AuthProvider } from './context/AuthContext';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function App() {
   return (
+    <AuthProvider>
     <NavigationContainer>
       <StatusBar style="dark" backgroundColor="#F3F6F2" />
       <Stack.Navigator initialRouteName="Login" screenOptions={{ headerShown: false, contentStyle: { backgroundColor: '#F3F6F2' } }}>
@@ -23,5 +25,6 @@ export default function App() {
         <Stack.Screen name="Confirmation" component={ConfirmationScreen} />
       </Stack.Navigator>
     </NavigationContainer>
+    </AuthProvider>
   );
 }

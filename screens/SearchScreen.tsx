@@ -8,10 +8,12 @@ import { Transport } from '../data/trips';
 import { StepHeader } from '../components/StepHeader';
 import { PrimaryButton } from '../components/PrimaryButton';
 import { colors, common } from '../theme';
+import { useAuth } from '../context/AuthContext';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Search'>;
 
 export function SearchScreen({ navigation, route }: Props) {
+  const { email } = useAuth();
   const [transport, setTransport] = useState<Transport>(route.params?.transport ?? 'train');
   const [from, setFrom] = useState('Минск');
   const [to, setTo] = useState('Брест');
@@ -22,6 +24,7 @@ export function SearchScreen({ navigation, route }: Props) {
       <ScrollView contentContainerStyle={common.content} keyboardShouldPersistTaps="handled">
         <StepHeader step="01 / ПОИСК" onBack={() => navigation.goBack()} />
         <Text style={common.title}>Куда отправимся?</Text>
+        {email && <Text style={styles.signedIn}>Вы вошли как {email}</Text>}
         <Text style={[common.subtitle, styles.subtitle]}>Выберите транспорт и маршрут</Text>
         <View style={styles.tabs}>
           {(['train', 'bus'] as Transport[]).map((item) => (
@@ -46,6 +49,7 @@ export function SearchScreen({ navigation, route }: Props) {
 }
 
 const styles = StyleSheet.create({
+  signedIn: { color: colors.brand, fontSize: 12, fontWeight: '700', marginTop: 8 },
   subtitle: { marginTop: 8 },
   tabs: { backgroundColor: colors.muted, borderRadius: 20, padding: 4, flexDirection: 'row', gap: 8, marginTop: 24, marginBottom: 16 },
   tab: { flex: 1, height: 48, borderRadius: 16, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8 },

@@ -5,11 +5,24 @@ import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigation';
 import { PrimaryButton } from '../components/PrimaryButton';
+import { FormField } from '../components/FormField';
+import { useForm } from '../hooks/useForm';
+import { validateLogin, LoginValues } from '../validation/login';
+import { useAuth } from '../context/AuthContext';
 import { colors, common } from '../theme';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Login'>;
 
 export function LoginScreen({ navigation }: Props) {
+  const { login } = useAuth();
+  const { values, errors, handleChange, handleSubmit, reset } = useForm<LoginValues>({ email: '', password: '' }, validateLogin);
+  function submit() {
+    handleSubmit((valid) => {
+      login(valid.email);
+      navigation.navigate('Search', { transport: 'train' });
+    });
+  }
+
   return (
     <SafeAreaView style={common.screen}>
       <ScrollView contentContainerStyle={[common.content, styles.content]} keyboardShouldPersistTaps="handled">
@@ -24,12 +37,15 @@ export function LoginScreen({ navigation }: Props) {
         </View>
         <Text style={common.title}>Поехали вместе</Text>
         <Text style={[common.subtitle, styles.intro]}>Войдите, чтобы выбрать свой маршрут</Text>
-        <Text style={styles.label}>Электронная почта</Text>
-        <View style={styles.inputWrap}><Ionicons name="mail-outline" size={22} color={colors.secondary} /><TextInput style={styles.input} autoCapitalize="none" keyboardType="email-address" defaultValue="student@example.com" accessibilityLabel="Электронная почта" /></View>
-        <Text style={styles.label}>Пароль</Text>
-        <View style={styles.inputWrap}><Ionicons name="lock-closed-outline" size={22} color={colors.secondary} /><TextInput style={styles.input} secureTextEntry defaultValue="password" accessibilityLabel="Пароль" /></View>
-        <View style={styles.loginButton}><PrimaryButton label="Войти" onPress={() => navigation.navigate('Search', { transport: 'train' })} /></View>
-        <Text style={styles.note}>Учебный прототип · без создания аккаунта</Text>
+        <FormField label="Электронная почта" error={errors.email}>
+          <View style={styles.inputWrap}><Ionicons name="mail-outline" size={22} color={colors.secondary} /><TextInput style={styles.input} autoCapitalize="none" keyboardType="email-address" placeholder="student@example.com" value={values.email} onChangeText={(text) => handleChange('email', text)} accessibilityLabel="Электронная почта" /></View>
+        </FormField>
+        <FormField label="Пароль" error={errors.password}>
+          <View style={styles.inputWrap}><Ionicons name="lock-closed-outline" size={22} color={colors.secondary} /><TextInput style={styles.input} secureTextEntry placeholder="Не менее 6 символов" value={values.password} onChangeText={(text) => handleChange('password', text)} accessibilityLabel="Пароль" /></View>
+        </FormField>
+        <View style={styles.loginButton}><PrimaryButton label="Войти" onPress={submit} /></View>
+        <View style={styles.resetButton}><PrimaryButton label="Очистить поля" variant="secondary" onPress={reset} /></View>
+        <Text style={styles.note}>Учебный прототип · без проверки на сервере</Text>
         <Text style={styles.tagline}>Ближе к тем, кто ждёт</Text>
       </ScrollView>
     </SafeAreaView>
@@ -50,10 +66,10 @@ const styles = StyleSheet.create({
   city: { color: colors.brand, fontSize: 12, fontWeight: '700' },
   heroCaption: { color: colors.secondary, textAlign: 'center', fontSize: 12, marginTop: 8 },
   intro: { marginTop: 8, marginBottom: 24 },
-  label: { color: colors.secondary, fontSize: 12, fontWeight: '700', marginBottom: 8, marginTop: 12 },
   inputWrap: { backgroundColor: colors.white, borderColor: colors.line, borderWidth: 1, borderRadius: 12, height: 56, paddingHorizontal: 16, flexDirection: 'row', alignItems: 'center', gap: 16 },
   input: { flex: 1, color: colors.ink, fontSize: 16, paddingVertical: 0 },
   loginButton: { marginTop: 32 },
+  resetButton: { marginTop: 12 },
   note: { color: colors.secondary, fontSize: 12, textAlign: 'center', marginTop: 24 },
   tagline: { color: colors.brand, fontSize: 12, fontWeight: '700', textAlign: 'center', marginTop: 28 },
 });
